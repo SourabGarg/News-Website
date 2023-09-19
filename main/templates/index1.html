@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Top News</title>
+</head>
+<body>
+    <h1>Top News</h1>
+
+    <!-- You can access the API data at different places in the template -->
+
+    <section>
+        <h2>Featured News</h2>
+        <ul>
+            {% for news_item in news_items[:2] %}
+                <li>
+                    <strong>{{ news_item['news_title'] }}</strong><br>
+                    Source: {{ news_item['news_source'] }}<br>
+                    <a href="{{ news_item['news_url'] }}" target="_blank">Read more</a><br>
+                    <img src="{{ news_item['news_img_url'] }}" alt="News Image">
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section>
+        <h2>More News</h2>
+        <ul>
+            {% for news_item in news_items[2:] %}
+                <li>
+                    <strong>{{ news_item['news_title'] }}</strong><br>
+                    Source: {{ news_item['news_source'] }}<br>
+                    <a href="{{ news_item['news_url'] }}" target="_blank">Read more</a><br>
+                    <img src="{{ news_item['news_img_url'] }}" alt="News Image">
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+   <h1>{{ news_items[0]['news_source'] }}</h1>
+   <h1>{{ news_items[0]['news_title'] }}</h1>
+   <h1>{{ news_items[0]['news_url'] }}</h1>
+   <h1>{{ news_items[0]['news_img_url'] }}</h1>
+</body>
+</html>

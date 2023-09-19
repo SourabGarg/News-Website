@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Cinzel+Decorative&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='assets/logo2.png') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <title>Google News</title>
+</head>
+<body>
+
+
+   <!-- Start of the header -->
+   <header class="d-flex flex-wrap justify-content-center py-3 mb-4">
+    <a  class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+      <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="google-logo"  style="border-radius: 10px; width: 150px; height: 45px; object-fit: contain;">
+      <!-- <span class="fs-4">News</span> -->
+    </a>
+    
+    <ul class="nav nav-pills">
+      <img src="{{ url_for('static', filename='assets/search_icon.svg') }}" alt="Search" id="search-logo" class="search">
+      <input type="text" placeholder="Search for topics location & sources" id="search-bar" class="search">
+      <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Sign up</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Log in</a></li>
+    </ul>
+  </header>
+  <!-- End of the header-->
+
+
+  <!-- Start of the title bar -->
+  <div class="title-bar-div">
+    <ul class="title-bar">
+      <a href="#" class="label">Home</a>
+      <a href="#" class="label">For you</a>
+      <a href="#" class="label">Following</a>
+      <a href="#" class="label">News Showcase</a>
+      <a class="bar">|</a>
+      <a href="#" class="label">India</a>
+      <a href="#" class="label">World</a>
+      <a href="#" class="label">Local</a>
+      <a href="#" class="label">Buisness</a>
+      <a href="#" class="label">Technology</a>
+      <a href="#" class="label">Enternainment</a>
+      <a href="#" class="label">Sports</a>
+      <a href="#" class="label">Science</a>
+      <a href="#" class="label">Health</a>
+    </ul>
+  </div>
+  <!-- End of the title bar -->
+
+
+  <!-- Srart of top bar -->
+  <div class="top-bar">
+    <div class="left-top-bar">
+      <h3>Your brefings</h3>
+      <h5>{{date_data.date}}</h5>
+    </div>
+    <div class="right-top-bar">
+      <div class="sub-right-top-bar">
+          <a href="https://weather.com/en-IN/weather/today/l/{{weather_data.lat}},{{weather_data.long}}?par=google"><img src="{{ url_for('static', filename='assets/'+weather_icon) }}" alt="Weather Icon" id="weather-icon"></a>
+          <a href="https://weather.com/en-IN/weather/today/l/{{weather_data.lat}},{{weather_data.long}}?par=google"><img src="{{ url_for('static', filename='assets/left-arrow.svg') }}" alt="Arrow" id="arrow-icon" ></a>
+      </div>
+        <ul>
+          <h5 style="color: rgba(0, 0, 0, 0.7);">{{weather_data.location }}</h5>
+          <h3>{{weather_data.temp}}°C </h3>
+          <a href="https://weather.com/en-IN/weather/today/l/{{weather_data.lat}},{{weather_data.long}}?par=google" id="weather-link">More on Weather.com</a>
+        </ul>
+    </div>
+  </div>
+  <!-- End of top  bar -->
+
+
+  <!-- Start of blocks -->
+  <div class="news-main">
+    <div class="grid1">
+      <div class="sub-grid1" style="color: #00758C; text-align: left; font-size: large;">Top Stories <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"></div>
+      <div class="sub-grid2">
+        <a href="{{ news_items[0]['news_url'] }}">
+            <div class="text-content">
+                <p class="news-from">{{ news_items[0]['news_source'] }}</p>
+                <p class="medium-news" href=" {{ news_items[0]['news_url'] }}" style="margin-bottom: 5px;">{{ news_items[0]['news_title'] }}</p>
+                <p class="news-time">4 hours ago</p>
+            </div>
+            <img src="{{ news_items[0]['news_img_url'] }}" alt="Image" class="news-image">
+        </a>
+    </div>
+      <div class="sub-grid3">
+        <a href="{{ news_items[1]['news_url'] }}">
+          <img src="{{ news_items[1]['news_img_url'] }}" alt="Image" style="width: 330px; height: 240px; border-radius: 15px; object-fit: cover;margin-bottom: 20px; margin-top: 20px;">
+          <p class="news-from">{{ news_items[1]['news_source'] }}</p>
+          <p class="big-news" href="{{ news_items[1]['news_url'] }}">{{ news_items[1]['news_title'] }}</p>
+          <p class="news-time">4 hours ago</p>
+        </a> 
+      </div>
+      <div class="sub-grid4" >
+        <a href="{{ news_items[2]['news_url'] }}">
+          <p class="news-from">{{ news_items[2]['news_source'] }}</p>
+          <p class="small-news">{{ news_items[2]['news_title'] }}</p>
+          <p class="news-time">4 hours ago</p>
+        </a>
+      </div>
+      <div class="sub-grid5">
+        <a href="{{ news_items[3]['news_url'] }}">
+          <p class="news-from" >{{ news_items[3]['news_source'] }}</p>
+          <p class="small-news" >{{ news_items[3]['news_title'] }}</p>
+          <p class="news-time" >5 hours ago</p>  
+        </a>
+      </div>
+      <div class="sub-grid6">
+        <a href="{{ news_items[4]['news_url'] }}">
+          <p class="news-from" >{{ news_items[4]['news_source'] }}</p>
+          <p class="small-news" >{{ news_items[4]['news_title'] }}</p>
+          <p class="news-time">11 hours ago</p>
+        </a>  
+      </div>
+      <div class="sub-grid7">
+        <a href="{{ news_items[5]['news_url'] }}">
+          <p class="news-from">{{ news_items[5]['news_source'] }}</p>
+          <p class="medium-news" href="{{ news_items[5]['news_url'] }}">{{ news_items[5]['news_title'] }}</p>
+          <p class="news-time">4 hours ago</p>
+          <img src="{{ news_items[5]['news_img_url'] }}" alt="Image" class="news-image">
+        </a>
+      </div>
+      <div class="sub-grid8">
+        <a href="{{ news_items[6]['news_url'] }}">
+          <p class="news-from">{{ news_items[6]['news_source'] }}</p>
+          <p class="medium-news" href="{{ news_items[6]['news_url'] }}">{{ news_items[6]['news_title'] }}</p>
+          <p class="news-time">4 hours ago</p>
+          <img src="{{ news_items[6]['news_img_url'] }}" alt="Image" class="news-image">
+        </a>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="sub-grid-S1" style="color: #00758C; text-align: left; font-size: large;">Market Monitor <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"> <hr style="color: black;"></div>
+      <div class="sub-grid-S2">
+        <p class="stock-name">{{ stock_data.name}}</p>
+        <p class="stock-price">₹ {{ stock_data.price }}</p>
+        <p class="stock-change" style="color: {{ stock_data.col }};">{{ stock_data.change }}</p>
+        <p class="stock-change-percentage" style="color: {{ stock_data.col }};">{{ stock_data.percentage }} {{stock_data.arrow}}</p>
+      </div>
+      <!-- <hr style="color: black; margin: -5px 0; border: none; border-top: 1px solid #000;">  -->
+      <div class="sub-grid-S3">
+        <p class="stock-name">{{ stock_data1.name}}</p>
+        <p class="stock-price">₹ {{ stock_data1.price }}</p>
+        <p class="stock-change" style="color: {{ stock_data1.col }};">{{ stock_data1.change }}</p>
+        <p class="stock-change-percentage" style="color: {{ stock_data1.col }};">{{ stock_data1.percentage }} {{stock_data1.arrow}}</p>
+      </div>
+      <!-- <hr style="color: black; margin: -5px 0; border: none; border-top: 1px solid #000; ">  -->
+      <div class="sub-grid-S4">
+        <p class="stock-name">{{ stock_data2.name}}</p>
+        <p class="stock-price">₹ {{ stock_data2.price }}</p>
+        <p class="stock-change" style="color: {{ stock_data2.col }};">{{ stock_data2.change }}</p>
+        <p class="stock-change-percentage" style="color: {{ stock_data2.col }};">{{ stock_data2.percentage }} {{stock_data2.arrow}}</p>
+      </div>
+    </div>
+    <div class="grid3" style="text-align: left;">
+      <div class="sub-grid-A" style="color: #00758C; text-align: left; font-size: large;">Pics for you  <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"><hr style="color: black;"></div>
+      <div class="sub-grid-B"><a href="{{ news_items[7]['news_url'] }}">
+        <p class="news-from">{{ news_items[7]['news_source'] }}</p>
+        <p class="small-news">{{ news_items[7]['news_title'] }}</p>
+        <p class="news-time">4 hours ago</p>
+      </a><hr></div>
+      <div class="sub-grid-C"><a href="{{ news_items[8]['news_url'] }}">
+        <p class="news-from">{{ news_items[8]['news_source'] }}</p>
+        <p class="small-news">{{ news_items[8]['news_title'] }}</p>
+        <p class="news-time">4 hours ago</p>
+      </a><hr></div>
+      <div class="sub-grid-D"><a href="{{ news_items[9]['news_url'] }}">
+        <p class="news-from">{{ news_items[9]['news_source'] }}</p>
+        <p class="small-news">{{ news_items[9]['news_title'] }}</p>
+        <p class="news-time">4 hours ago</p>
+      </a><hr></div>
+      <div class="sub-grid-E"><a href="{{ news_items[10]['news_url'] }}">
+        <p class="news-from">{{ news_items[10]['news_source'] }}</p>
+        <p class="small-news">{{ news_items[10]['news_title'] }}</p>
+        <p class="news-time">4 hours ago</p>
+      </a></div>
+    </div>
+  </div>
+  <!-- End of blocks -->
+
+  <!--  -->
+  <!--  -->
+</body>
+</html>
