@@ -10,7 +10,13 @@
     <link rel="icon" href="{{ url_for('static', filename='assets/logo2.png') }}" type="image/x-icon">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <title>Google News</title>
+    <title>News hub</title>
+    <style>
+      #{{currently}} {
+        color: #00758C;
+        font-weight: bold;
+      } 
+    </style>
 </head>
 <body>
 
@@ -19,18 +25,22 @@
    <header class="d-flex flex-wrap justify-content-center py-3 mb-4">
     <a  class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
       <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
-      <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="google-logo"  style="border-radius: 10px; width: 150px; height: 45px; object-fit: contain;">
+      <a href="{{ url_for('home') }}" id="logo-image"><img src="{{ url_for('static', filename='assets/logo.png') }}" alt="news-hub-logo"  style="border-radius: 10px; width: 150px; height: 45px; object-fit: contain;"></a>
       <!-- <span class="fs-4">News</span> -->
     </a>
     
     <ul class="nav nav-pills">
-      <img src="{{ url_for('static', filename='assets/search_icon.svg') }}" alt="Search" id="search-logo" class="search">
-      <input type="text" placeholder="Search for topics location & sources" id="search-bar" class="search">
-      <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
+      <!-- <img src="{{ url_for('static', filename='assets/search_icon.svg') }}" alt="Search" id="search-logo" class="search"> -->
+      <!-- <input type="text" placeholder="Search for topics location & sources" id="search-bar" class="search"> -->
+      <form action="/process" method="post" autocomplete="off">
+        <input type="image" src="{{ url_for('static', filename='assets/search_icon.svg') }}" alt="Submit" id="search-logo" class="search">
+        <input type="text" id="search-bar" name="user_input" class="search" placeholder="Search for topics location & keyword" style="top: -13px;left: -5px; position: relative;">
+      </form>
+      <li class="nav-item"><a href="{{ url_for('home') }}" class="nav-link">Home</a></li>
       <li class="nav-item"><a href="#" class="nav-link">Features</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">Sign up</a></li>
-      <li class="nav-item"><a href="#" class="nav-link">Log in</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" style="margin-right: 10px;">About</a></li>
+      <!-- <li class="nav-item"><a href="#" class="nav-link">Sign up</a></li>
+      <li class="nav-item"><a href="#" class="nav-link">Log in</a></li> -->
     </ul>
   </header>
   <!-- End of the header-->
@@ -39,20 +49,13 @@
   <!-- Start of the title bar -->
   <div class="title-bar-div">
     <ul class="title-bar">
-      <a href="#" class="label">Home</a>
-      <a href="#" class="label">For you</a>
-      <a href="#" class="label">Following</a>
-      <a href="#" class="label">News Showcase</a>
-      <a class="bar">|</a>
-      <a href="#" class="label">India</a>
-      <a href="#" class="label">World</a>
-      <a href="#" class="label">Local</a>
-      <a href="#" class="label">Buisness</a>
-      <a href="#" class="label">Technology</a>
-      <a href="#" class="label">Enternainment</a>
-      <a href="#" class="label">Sports</a>
-      <a href="#" class="label">Science</a>
-      <a href="#" class="label">Health</a>
+      <a href="{{ url_for('home') }}" class="label" id="local_label">Local</a>
+      <a href="{{ url_for('business') }}" class="label" id="business_label">Buisness</a>
+      <a href="{{ url_for('technology') }}" class="label" id="technology_label">Technology</a>
+      <a href="{{ url_for('entertainment') }}" class="label" id="entertainment_label">Enternainment</a>
+      <a href="{{ url_for('sports') }}" class="label" id="sports_label">Sports</a>
+      <a href="{{ url_for('science') }}" class="label" id="science_label">Science</a>
+      <a href="{{ url_for('health') }}" class="label" id="health_label">Health</a>
     </ul>
   </div>
   <!-- End of the title bar -->
@@ -61,7 +64,7 @@
   <!-- Srart of top bar -->
   <div class="top-bar">
     <div class="left-top-bar">
-      <h3>Your brefings</h3>
+      <h3>{{ title }}</h3>
       <h5>{{date_data.date}}</h5>
     </div>
     <div class="right-top-bar">
@@ -88,9 +91,9 @@
             <div class="text-content">
                 <p class="news-from">{{ news_items[0]['news_source'] }}</p>
                 <p class="medium-news" href=" {{ news_items[0]['news_url'] }}" style="margin-bottom: 5px;">{{ news_items[0]['news_title'] }}</p>
-                <p class="news-time">4 hours ago</p>
+                <p class="news-time">{{ news_items[0]['uploadedIn'] }}  </p>
             </div>
-            <img src="{{ news_items[0]['news_img_url'] }}" alt="Image" class="news-image">
+            <img src="{{ news_items[0]['news_img_url'] }}" alt="Image" class="news-image" style="top: -100px;">
         </a>
     </div>
       <div class="sub-grid3">
@@ -98,35 +101,35 @@
           <img src="{{ news_items[1]['news_img_url'] }}" alt="Image" style="width: 330px; height: 240px; border-radius: 15px; object-fit: cover;margin-bottom: 20px; margin-top: 20px;">
           <p class="news-from">{{ news_items[1]['news_source'] }}</p>
           <p class="big-news" href="{{ news_items[1]['news_url'] }}">{{ news_items[1]['news_title'] }}</p>
-          <p class="news-time">4 hours ago</p>
+          <p class="news-time">{{ news_items[1]['uploadedIn'] }}  </p>
         </a> 
       </div>
       <div class="sub-grid4" >
         <a href="{{ news_items[2]['news_url'] }}">
           <p class="news-from">{{ news_items[2]['news_source'] }}</p>
           <p class="small-news">{{ news_items[2]['news_title'] }}</p>
-          <p class="news-time">4 hours ago</p>
+          <p class="news-time">{{ news_items[2]['uploadedIn'] }}  </p>
         </a>
       </div>
       <div class="sub-grid5">
         <a href="{{ news_items[3]['news_url'] }}">
           <p class="news-from" >{{ news_items[3]['news_source'] }}</p>
           <p class="small-news" >{{ news_items[3]['news_title'] }}</p>
-          <p class="news-time" >5 hours ago</p>  
+          <p class="news-time" >{{ news_items[3]['uploadedIn'] }}  </p>  
         </a>
       </div>
       <div class="sub-grid6">
         <a href="{{ news_items[4]['news_url'] }}">
           <p class="news-from" >{{ news_items[4]['news_source'] }}</p>
           <p class="small-news" >{{ news_items[4]['news_title'] }}</p>
-          <p class="news-time">11 hours ago</p>
+          <p class="news-time">{{ news_items[4]['uploadedIn'] }}  </p>
         </a>  
       </div>
       <div class="sub-grid7">
         <a href="{{ news_items[5]['news_url'] }}">
           <p class="news-from">{{ news_items[5]['news_source'] }}</p>
           <p class="medium-news" href="{{ news_items[5]['news_url'] }}">{{ news_items[5]['news_title'] }}</p>
-          <p class="news-time">4 hours ago</p>
+          <p class="news-time">{{ news_items[5]['uploadedIn'] }}  </p>
           <img src="{{ news_items[5]['news_img_url'] }}" alt="Image" class="news-image">
         </a>
       </div>
@@ -134,7 +137,7 @@
         <a href="{{ news_items[6]['news_url'] }}">
           <p class="news-from">{{ news_items[6]['news_source'] }}</p>
           <p class="medium-news" href="{{ news_items[6]['news_url'] }}">{{ news_items[6]['news_title'] }}</p>
-          <p class="news-time">4 hours ago</p>
+          <p class="news-time">{{ news_items[6]['uploadedIn'] }}  </p>
           <img src="{{ news_items[6]['news_img_url'] }}" alt="Image" class="news-image">
         </a>
       </div>
@@ -163,32 +166,141 @@
       </div>
     </div>
     <div class="grid3" style="text-align: left;">
-      <div class="sub-grid-A" style="color: #00758C; text-align: left; font-size: large;">Pics for you  <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"><hr style="color: black;"></div>
+      <div class="sub-grid-A" style="color: #00758C; text-align: left; font-size: large;">Pics for you  <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"></div>
       <div class="sub-grid-B"><a href="{{ news_items[7]['news_url'] }}">
         <p class="news-from">{{ news_items[7]['news_source'] }}</p>
         <p class="small-news">{{ news_items[7]['news_title'] }}</p>
-        <p class="news-time">4 hours ago</p>
-      </a><hr></div>
+        <p class="news-time">{{ news_items[7]['uploadedIn'] }}  </p>
+      </a></div>
       <div class="sub-grid-C"><a href="{{ news_items[8]['news_url'] }}">
         <p class="news-from">{{ news_items[8]['news_source'] }}</p>
         <p class="small-news">{{ news_items[8]['news_title'] }}</p>
-        <p class="news-time">4 hours ago</p>
-      </a><hr></div>
+        <p class="news-time">{{ news_items[8]['uploadedIn'] }}  </p>
+      </a></div>
       <div class="sub-grid-D"><a href="{{ news_items[9]['news_url'] }}">
         <p class="news-from">{{ news_items[9]['news_source'] }}</p>
         <p class="small-news">{{ news_items[9]['news_title'] }}</p>
-        <p class="news-time">4 hours ago</p>
-      </a><hr></div>
-      <div class="sub-grid-E"><a href="{{ news_items[10]['news_url'] }}">
+        <p class="news-time">{{ news_items[9]['uploadedIn'] }}  </p>
+      </a></div>
+      <div class="sub-grid-E" style="border-bottom: 0;"><a href="{{ news_items[10]['news_url'] }}" >
         <p class="news-from">{{ news_items[10]['news_source'] }}</p>
         <p class="small-news">{{ news_items[10]['news_title'] }}</p>
-        <p class="news-time">4 hours ago</p>
+        <p class="news-time">{{ news_items[10]['uploadedIn'] }}  </p>
       </a></div>
     </div>
   </div>
   <!-- End of blocks -->
 
-  <!--  -->
-  <!--  -->
+  <!--  start of 2nd block-->
+  <div class="news-main-2" >
+    <div class="grid-2-a">
+      <div class="sub-grid1" style="color: #00758C; text-align: left; font-size: large;">Top Stories <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"></div>
+      <div class="sub-grid2">
+        <a href="{{ news_items[11]['news_url'] }}">
+            <div class="text-content">
+              <p class="news-from">{{ news_items[11]['news_source'] }}</p>
+              <p class="medium-news" href=" {{ news_items[11]['news_url'] }}" style="margin-bottom: 5px;">{{ news_items[11]['news_title'] }}</p>
+              <p class="news-time">{{ news_items[11]['uploadedIn'] }}  </p>
+            </div>
+            <img src="{{ news_items[11]['news_img_url'] }}" alt="Image" class="news-image" style="top: -100px;">
+          </a>
+       </div>
+        <div class="sub-grid3">
+          <a href="{{ news_items[12]['news_url'] }}">
+            <img src="{{ news_items[12]['news_img_url'] }}" alt="Image" style="width: 330px; height: 240px; border-radius: 15px; object-fit: cover;margin-bottom: 20px; margin-top: 20px;">
+            <p class="news-from">{{ news_items[12]['news_source'] }}</p>
+            <p class="big-news" href="{{ news_items[12]['news_url'] }}">{{ news_items[12]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[12]['uploadedIn'] }}  </p>
+          </a> 
+        </div>
+        <div class="sub-grid4" >
+          <a href="{{ news_items[13]['news_url'] }}">
+            <p class="news-from">{{ news_items[13]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[13]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[13]['uploadedIn'] }}  </p>
+          </a>
+        </div>
+        <div class="sub-grid5">
+          <a href="{{ news_items[14]['news_url'] }}">
+            <p class="news-from" >{{ news_items[14]['news_source'] }}</p>
+            <p class="small-news" >{{ news_items[14]['news_title'] }}</p>
+            <p class="news-time" >{{ news_items[14]['uploadedIn'] }}  </p>  
+          </a>
+        </div>
+        <div class="sub-grid6">
+          <a href="{{ news_items[15]['news_url'] }}">
+            <p class="news-from" >{{ news_items[15]['news_source'] }}</p>
+            <p class="small-news" >{{ news_items[15]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[15]['uploadedIn'] }}  </p>
+          </a>  
+        </div>
+        <div class="sub-grid7">
+          <a href="{{ news_items[5]['news_url'] }}">
+            <p class="news-from">{{ news_items[16]['news_source'] }}</p>
+            <p class="medium-news" href="{{ news_items[16]['news_url'] }}">{{ news_items[16]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[15]['uploadedIn'] }}  </p>
+            <img src="{{ news_items[16]['news_img_url'] }}" alt="Image" class="news-image">
+          </a>
+        </div>
+        <div class="sub-grid8">
+          <a href="{{ news_items[17]['news_url'] }}">
+            <p class="news-from">{{ news_items[17]['news_source'] }}</p>
+            <p class="medium-news" href="{{ news_items[17]['news_url'] }}">{{ news_items[17]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[17]['uploadedIn'] }}  </p>
+            <img src="{{ news_items[17]['news_img_url'] }}" alt="Image" class="news-image">
+          </a>
+        </div>
+      </div>
+    <div class="grid-2-b" style="text-align: left;">
+          <div class="sub-grid-A" style="color: #00758C; text-align: left; font-size: large;">Hot Stories  <img src="{{ url_for('static', filename='assets/right-arrow.svg') }}" style="width: 25px; height: 25px;"></div>
+          <div class="sub-grid-B"><a href="{{ news_items[18]['news_url'] }}">
+            <p class="news-from">{{ news_items[18]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[18]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[18]['uploadedIn'] }}  </p>
+          </a></div>
+          <div class="sub-grid-C"><a href="{{ news_items[19]['news_url'] }}">
+            <p class="news-from">{{ news_items[19]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[19]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[19]['uploadedIn'] }}  </p>
+          </a></div>
+          <div class="sub-grid-D"><a href="{{ news_items[19]['news_url'] }}">
+            <p class="news-from">{{ news_items[19]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[19]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[19]['uploadedIn'] }}  </p>
+          </a></div>
+          <div class="sub-grid-E"><a href="{{ news_items[19]['news_url'] }}">
+            <p class="news-from">{{ news_items[19]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[19]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[19]['uploadedIn'] }}  </p>
+          </a></div>
+          <div class="sub-grid-F"><a href="{{ news_items[19]['news_url'] }}">
+            <p class="news-from">{{ news_items[19]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[19]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[19]['uploadedIn'] }}  </p>
+          </a></div>
+          <div class="sub-grid-G"><a href="{{ news_items[19]['news_url'] }}">
+            <p class="news-from">{{ news_items[19]['news_source'] }}</p>
+            <p class="small-news">{{ news_items[19]['news_title'] }}</p>
+            <p class="news-time">{{ news_items[19]['uploadedIn'] }}  </p>
+          </a></div>
+  </div>
+</div>
+  <!--  end of 2nd block-->
+  <!-- start of footer -->
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+    <div class="col-md-4 d-flex align-items-center">
+      <a href="/" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1">
+        <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
+      </a>
+      <span class="mb-3 mb-md-0 text-body-secondary">© 2023 Company, Inc</span>
+    </div>
+
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="bootstrap-icons.#twitter"></use></svg></a></li>
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
+      <li class="ms-3"><a class="text-body-secondary" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+    </ul>
+  </footer>
+  <!-- end of footer -->
 </body>
 </html>

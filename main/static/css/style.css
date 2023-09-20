@@ -16,6 +16,11 @@ header{
         right: 0;
         z-index: 2;
     }
+#logo-image {
+        position: absolute;
+        left: 10px; /* Adjust the left position as needed */
+        top: 10px; /* Adjust the top position as needed */
+    }
 #search-bar{
     margin-right: 20px;
     border-left: none;
@@ -55,6 +60,9 @@ a{
     text-decoration: none;
     margin-left: 12px;
     margin-right: 12px;
+}
+.label:hover{
+    color: #ff9900;
 }
 .title-bar-div{
     background-color: white !important;
@@ -175,6 +183,7 @@ a{
 }
 p{
     text-decoration: none !important;
+    text-align: left !important; 
 }
 .small-news{
     font-size: 120%;
@@ -204,7 +213,7 @@ p{
 }
 
 .sub-grid3{
-    grid-area: cc;
+    grid-area: cc; 
 }
 .sub-grid1, .sub-grid2, .sub-grid3, .sub-grid4, .sub-grid5, .sub-grid6, .sub-grid7, .sub-grid8{
     margin: 10px;
@@ -234,7 +243,7 @@ p{
 .sub-grid2, .sub-grid7, .sub-grid8 {
     display: flex; /* Use flexbox */
     flex-direction: column;
-    align-items: center; /* Vertically center the content */
+    align-items: left; /* Vertically center the content */
 }
 .sub-grid2 a, .sub-grid7 a, .sub-grid8 a{
     height: 160px;
@@ -249,6 +258,9 @@ p{
     margin-top: 0;
     margin-bottom: 10px !important;
 }
+.sub-grid-A .news-time, .sub-grid-B .news-time, .sub-grid-C .news-time, .sub-grid-D .news-time, .sub-grid-E .news-time, .sub-grid-F .news-time{
+    margin-bottom: 15px;
+}
 .news-time{
     margin-bottom: 0;
     font-size: 80%;
@@ -260,7 +272,7 @@ p{
     object-fit: cover;
     float: right;
     position: relative;
-    top: -140px;
+    top: -120px;
     left: 0px;
 }
 /* .news-image{
@@ -343,4 +355,67 @@ grid-area: 4 / 1 / 5 / 2;
 }
 .D {
 grid-area: 5 / 1 / 6 / 2; 
+}
+.news-main-2{
+    background-color: #f6f8fc;
+    display: grid;
+    padding: 10px;
+    grid-template-columns: 2fr 1fr;
+    grid-template-areas: 
+    "a2 b2 "
+    "a2 b2 "; 
+    padding-left: 10%;
+    padding-right: 10%;
+    gap: 10px 10px;
+}
+.grid-2-a {
+    background-color: white;
+    border-radius: 15px;
+    padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    grid-area: a;
+    display: grid;
+    text-align: left;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 0.3fr 0.80fr 0.5fr 0.5fr 0.9fr 0.7fr 0.7fr ;
+    gap: 0px 0px;
+    grid-template-areas:
+        "aa aa"
+        "bb bb"
+        "cc dd"
+        "cc ee"
+        "cc ff"
+        "gg gg"
+        "hh hh";
+}
+.grid-2-a{
+background-color: white;
+border-radius: 15px;
+padding-top: 30px;
+padding-left: 30px;
+padding-right: 30px;
+grid-area: a2;
+}
+.grid-2-b{
+    height: 1200px;
+    background-color: white;
+    display: grid; 
+    text-align: center;
+    border-radius: 15px;
+    padding-top: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
+    grid-auto-columns: 1fr; 
+    grid-template-rows: repeat(7, auto); 
+    gap: 0px 0px; 
+}
+.sub-grid-A, .sub-grid-B, .sub-grid-C, .sub-grid-D, .sub-grid-E, .sub-grid-F{
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.ms-3:hover {
+    fill: #ff9900;
 }

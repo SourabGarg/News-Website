@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import datetime
 import functools
 
@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 my_latitude = 32.21
 my_longitude = 76.32
-weather_api_key = "221d708793f50c37cb4f572ffdc61be0"
+weather_api_key = "YOUR API"
 weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={my_latitude}&lon=" \
               f"{my_longitude}&appid={weather_api_key}"
 
@@ -36,29 +36,24 @@ def get_weather():
 
 
 def get_stock(stock_name):
-    # stock_name = "TSLA"
-    # stock_key0 = "83CBTVYFU0QD6DPS"
-    stock_key = "ZSL5HSLP0USX00RI"
+    stock_key = "YOUR API"
     stock_url = "https://www.alphavantage.co/query"
     stock_parameters = {
         'function': 'TIME_SERIES_DAILY',
         'symbol': stock_name,
         'apikey': stock_key,
     }
-    # stock_response = requests.get(url=stock_url, params=stock_parameters)
-    # stock_data = stock_response.json()
-    #
-    # stock_data_details = stock_data['Time Series (Daily)']
-    # stock_timestamp = list(stock_data_details.keys())[:2]
-    # stock_close_price_today = round(float(stock_data_details[stock_timestamp[0]]['4. close'])*83.15, 2)
-    # stock_close_price_yesterday = round(float(stock_data_details[stock_timestamp[1]]['4. close'])*83.15, 2)
-    #
-    # stock_price_change = round(float(((stock_close_price_today-stock_close_price_yesterday) / stock_close_price_yesterday)*100),2)
-    # difference = round(float(stock_close_price_today-stock_close_price_yesterday),2)
-    stock_close_price_today = 1232
-    stock_close_price_yesterday = 223
-    stock_price_change = round(float(((stock_close_price_today-stock_close_price_yesterday) / stock_close_price_yesterday)*100),2)
-    difference = round(float(stock_close_price_today-stock_close_price_yesterday),2)
+    stock_response = requests.get(url=stock_url, params=stock_parameters)
+    stock_data = stock_response.json()
+
+    stock_data_details = stock_data['Time Series (Daily)']
+    stock_timestamp = list(stock_data_details.keys())[:2]
+    stock_close_price_today = round(float(stock_data_details[stock_timestamp[0]]['4. close'])*83.15, 2)
+    stock_close_price_yesterday = round(float(stock_data_details[stock_timestamp[1]]['4. close'])*83.15, 2)
+
+    stock_price_change = round(float(((stock_close_price_today-stock_close_price_yesterday)
+                                         /stock_close_price_yesterday)*100), 2)
+    difference = round(float(stock_close_price_today-stock_close_price_yesterday), 2)
     if difference > 0:
         col = "#008561"
         arrow = "%▲"
@@ -79,12 +74,13 @@ def get_stock(stock_name):
 
 
 @functools.lru_cache(maxsize=1)  # Cache the result for get_top_news
-def get_top_news(num):
-    NEWS_KEY = "f147600b78974c9894b3d867ed1b23d3"
+def get_top_news(num, country, category):
+    NEWS_KEY = "YOUR API"
     news_url = "https://newsapi.org/v2/top-headlines?"
     news_parameters = {
         'apiKey': NEWS_KEY,
-        'country': 'in',
+        'country': country,
+        'category': category,
     }
     response = requests.get(url=news_url, params=news_parameters)
     data = response.json()
@@ -95,11 +91,68 @@ def get_top_news(num):
         news_title = data['articles'][i]['title']
         news_url = data['articles'][i]['url']
         news_img_url = data['articles'][i]['urlToImage']
+        publishedAt = data['articles'][i]['publishedAt']
+        date = datetime.datetime.strptime(publishedAt, "%Y-%m-%dT%H:%M:%SZ")
+        current_time = datetime.datetime.utcnow()
+        time_difference = current_time - date
+        if time_difference.total_seconds() < 3600:
+            minutes_ago = int(time_difference.total_seconds() / 60)
+            uploadedIn = f"{minutes_ago} minutes ago"
+        elif time_difference.total_seconds() < 86400:
+            hours_ago = int(time_difference.total_seconds() / 3600)
+            uploadedIn = f"{hours_ago} hours ago"
+        else:
+            days_ago = int(time_difference.total_seconds() / 86400)
+            uploadedIn = f"{days_ago} days ago"
         news_item = {
             "news_source": news_source,
             "news_title": news_title,
             "news_url": news_url,
             "news_img_url": news_img_url,
+            "uploadedIn": uploadedIn,
+        }
+        news_list.append(news_item)
+
+    return news_list
+
+
+@functools.lru_cache(maxsize=1)  # Cache the result for get_top_news
+def get_keyword_news(num, keyword):
+    NEWS_KEY = "YOUR API"
+    news_url = "https://newsapi.org/v2/everything?"
+    news_parameters = {
+        'apiKey': NEWS_KEY,
+        'q': keyword,
+    }
+    response = requests.get(url=news_url, params=news_parameters)
+    data = response.json()
+    print(data)
+    news_list = []
+
+    for i in range(num):
+        news_source = data['articles'][i]['source']['name']
+        news_title = data['articles'][i]['title']
+        news_url = data['articles'][i]['url']
+        news_img_url = data['articles'][i]['urlToImage']
+        publishedAt = data['articles'][i]['publishedAt']
+        date = datetime.datetime.strptime(publishedAt, "%Y-%m-%dT%H:%M:%SZ")
+        current_time = datetime.datetime.utcnow()
+        time_difference = current_time - date
+        if time_difference.total_seconds() < 3600:
+            minutes_ago = int(time_difference.total_seconds() / 60)
+            uploadedIn = f"{minutes_ago} minutes ago"
+        elif time_difference.total_seconds() < 86400:
+            hours_ago = int(time_difference.total_seconds() / 3600)
+            uploadedIn = f"{hours_ago} hours ago"
+        else:
+            days_ago = int(time_difference.total_seconds() / 86400)
+            uploadedIn = f"{days_ago} days ago"
+        news_item = {
+            "news_source": news_source,
+            "news_title": news_title,
+            "news_url": news_url,
+            "news_img_url": news_img_url,
+            "uploadedIn": uploadedIn,
         }
         news_list.append(news_item)
 
@@ -108,6 +161,8 @@ def get_top_news(num):
 
 @app.route("/")
 def home():
+    title = "Your briefing"
+    currently = "local_label"
     date_data = get_date()
     weather_data = get_weather()
 
@@ -124,11 +179,201 @@ def home():
     stock_data1 = get_stock("NVDA")
     stock_data2 = get_stock("AMZN")
 
-    num_of_news = 15
-    news_items = get_top_news(num_of_news)
+    news_items = get_top_news(20, country='in', category='general')
 
-    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon, stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
-                           news_items=news_items)
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/sports")
+def sports():
+    title = "Sports briefing"
+    currently = "sports_label"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_top_news(20, country='in', category='sports')
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/entertainment")
+def entertainment():
+    title = "Entertainment briefing"
+    currently = "entertainment_label"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_top_news(20, country='in', category='entertainment')
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/technology")
+def technology():
+    title = "Technology briefing"
+    currently = "technology_label"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_top_news(20, country='in', category='technology')
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/business")
+def business():
+    title = "Business briefing"
+    currently = "business_label"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_top_news(20, country='in', category='business')
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/science")
+def science():
+    title = "Science briefing"
+    currently = "science_label"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_top_news(20, country='in', category='science')
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/health")
+def health():
+    title = "Health briefing"
+    currently = "health_label"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_top_news(20, country='in', category='health')
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, title=title, currently=currently)
+
+
+@app.route("/process", methods=['POST'])
+def process():
+    input_keyword = request.form['user_input']
+    title = input_keyword.capitalize()+" briefing"
+    date_data = get_date()
+    weather_data = get_weather()
+
+    if 'Rain' in weather_data['overall']:
+        weather_icon = "rain.png"
+    elif 'Cloud' in weather_data['overall'] or 'cloudy' in weather_data['description']:
+        weather_icon = "cloud.png"
+    elif 'Sun' in weather_data['overall'] or 'sun' in weather_data['description']:
+        weather_icon = "sun.png"
+    else:
+        weather_icon = "default.png"
+
+    stock_data = get_stock("TSLA")
+    stock_data1 = get_stock("NVDA")
+    stock_data2 = get_stock("AMZN")
+
+    news_items = get_keyword_news(20, keyword=input_keyword)
+    input_keyword = ""
+
+    return render_template("index.html", weather_data=weather_data, date_data=date_data, weather_icon=weather_icon,
+                           stock_data=stock_data, stock_data1=stock_data1, stock_data2=stock_data2,
+                           news_items=news_items, input_keyword=input_keyword, title=title)
 
 
 if __name__ == "__main__":
