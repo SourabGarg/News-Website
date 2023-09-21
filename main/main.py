@@ -5,8 +5,8 @@ import functools
 
 app = Flask(__name__)
 
-my_latitude = 32.21
-my_longitude = 76.32
+my_latitude = Your Latitude
+my_longitude = Your Longitude
 weather_api_key = "YOUR API"
 weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={my_latitude}&lon=" \
               f"{my_longitude}&appid={weather_api_key}"
