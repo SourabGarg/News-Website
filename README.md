@@ -15,6 +15,6 @@ Stocks: Monitor stock prices, indices, and financial news to make informed inves
 
 Technologies Used:
 
-Frontend: HTML, CSS, JavaScript        
+Frontend: HTML, CSS        
         Backend: Python, Flask
           (Not a Responsive Website)
