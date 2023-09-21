@@ -8,8 +8,8 @@ This project is designed to provide users with a one-stop platform for staying i
 Features:
 
 News: Stay informed with the latest news articles from various sources.       
-  Weather: Get real-time weather updates for your location or any place of interest.
-Stocks: Monitor stock prices, indices, and financial news to make informed investment decisions.
+  Weather: Get real-time weather updates for your location or any place of interest.                  
+         Stocks: Monitor stock prices, indices, and financial news to make informed investment decisions.
 
 
 
