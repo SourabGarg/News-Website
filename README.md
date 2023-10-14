@@ -17,4 +17,14 @@ Technologies Used:
 
 Frontend: HTML, CSS        
         Backend: Python, Flask
-          (Not a Responsive Website)
+
+
+OUTPUT:
+
+![image](https://github.com/SourabGarg/News-Website/assets/112079423/c876c8fb-54b6-48c8-be4d-97ce17d1a375)
+![image](https://github.com/SourabGarg/News-Website/assets/112079423/770b6cd5-9f1f-4e01-9bca-5c7b29a9e570)
+
+SEARCH OUTPUT:
+![image](https://github.com/SourabGarg/News-Website/assets/112079423/edf71330-3ef3-46cf-8205-6db340c4fb5c)
+
+
